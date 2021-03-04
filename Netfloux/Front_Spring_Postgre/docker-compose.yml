@@ -1,0 +1,45 @@
+version: "3"
+services:
+
+  # Angular
+  angular-app: 
+    image: angular-app:latest
+    build: 
+      context: ./Client/NetFloux
+      dockerfile: Dockerfile
+    #container_name: angular-app
+    ports: 
+      - "4200:80"
+    links: 
+      - spring
+
+  # SpringBoot
+  spring:
+    build: ./Server/spring-netfloux/spring-netfloux
+    #container-name: spring-app
+    environment: 
+      - DB_SERVER=postgres
+      - POSTGRES_DB=NetFloux
+      - POSTGRES_USER=postgres
+      - PASSWORD_PASSWORD=esiee2021
+
+    ports:
+      - "8080:8080"
+    links: 
+      - postgres
+
+  # PostgreSQL
+  postgres: 
+    image: postgres
+    #container-name: postgres-app
+    volumes: 
+      - myvolume:/var/lib/postgresql/NetFloux
+    ports: 
+      - "5432:5432"
+    environment: 
+      - POSTGRES_DB=NetFloux
+      - POSTGRES_USER=postgres
+      - PASSWORD_PASSWORD=esiee2021      
+
+volumes:
+  myvolume:
