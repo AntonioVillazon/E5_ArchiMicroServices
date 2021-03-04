@@ -1,0 +1,91 @@
+version: '3.3'
+services: 
+    catalog:
+        image: catalog:latest
+        build:
+            context: Catalog/.
+            dockerfile: Dockerfile
+        ports:
+            - 5001:5001
+        restart: always
+        environment:
+            - DB:/usr/src/app/moviesDB.db
+        volumes:
+            - volume:/usr/src/app
+    
+    recommandation:
+        image: recommandation:latest
+        build:
+            context: Recommandation/.
+            dockerfile: Dockerfile
+        ports:
+            - 5002:5002
+        restart: always
+        environment:
+            - DB:/usr/src/app/moviesDB.db
+        links:
+            - catalog
+        depends_on:
+            - catalog
+        volumes:
+            - volume:/usr/src/app
+            
+    search:
+        image: search:latest
+        build:
+            context: Search/.
+            dockerfile: Dockerfile
+        ports:
+            - 5003:5003
+        restart: always
+        environment:
+            - DB:/usr/src/app/moviesDB.db
+        links:
+            - catalog
+        depends_on:
+            - catalog
+        volumes:
+            - volume:/usr/src/app
+            
+    films:
+        image: films:latest
+        build:
+            context: Films/.
+            dockerfile: Dockerfile
+        ports:
+            - 5004:5004
+        restart: always
+        environment:
+            - DB:/usr/src/app/moviesDB.db
+        links:
+            - catalog
+        depends_on:
+            - catalog
+        volumes:
+            - volume:/usr/src/app
+            
+    profils:
+        image: profils:latest
+        build:
+            context: Profils/.
+            dockerfile: Dockerfile
+        ports:
+            - 5005:5005
+        restart: always
+        environment:
+            - DB:/usr/src/app/profilsDB.db
+        volumes:
+            - volume:/usr/src/app
+    
+    credits:
+        image: credits:latest
+        build:
+            context: Credits/.
+            dockerfile: Dockerfile
+        ports:
+            - 5006:5006
+        restart: always 
+        
+volumes:
+    volume:
+    
